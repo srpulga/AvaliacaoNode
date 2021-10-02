@@ -11,7 +11,7 @@ router.get('/produto/:id', ProdutoController.show); // Listar um produto pelo id
 router.put('/produto/:id', ProdutoController.update); // Alterar um produto
 router.delete('/produto/:id', ProdutoController.delete); // Deletar
 
-router.post('ingrediente', IngredienteController.store); // Criar um ingrediente
+router.post('/ingrediente', IngredienteController.store); // Criar um ingrediente
 router.get('/ingrediente', IngredienteController.index); // Listar ingredientes
 router.get('/ingrediente/:id', IngredienteController.show); // Listar um ingrediente pelo id
 router.put('/ingrediente/:id', IngredienteController.update); // Alterar um ingrediente

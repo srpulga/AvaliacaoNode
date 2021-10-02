@@ -1,4 +1,5 @@
 const db = require('../database');
+// importando banco de dados
 
 function checkIfValidUUID(str) {
   // Regular expression to check if string is a valid UUID
@@ -6,7 +7,6 @@ function checkIfValidUUID(str) {
 
   return regexExp.test(str);
 }
-// importando banco de dados
 class ProdutosRepositories {
   async create({
     name, price, ingredient_id,
