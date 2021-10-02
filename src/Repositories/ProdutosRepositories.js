@@ -1,4 +1,11 @@
 const db = require('../database');
+
+function checkIfValidUUID(str) {
+  // Regular expression to check if string is a valid UUID
+  const regexExp = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
+
+  return regexExp.test(str);
+}
 // importando banco de dados
 class ProdutosRepositories {
   async create({
@@ -15,8 +22,7 @@ class ProdutosRepositories {
   // Lista todos os produtos listados pelo nome, como não tem nenhuma validação ele puxa sempre por ordem ASC ("crescente"), nesse caso de A a Z
   async findAll() {
     const rows = await db.query(`
-      SELECT *
-      FROM product
+      SELECT * FROM product
       ORDER BY name
     `);
     return rows;
@@ -24,11 +30,14 @@ class ProdutosRepositories {
 
   // Seleciona todos onde o id na tabela é igual ao id do corpo
   async findById(id) {
-    const [row] = await db.query(`
+    if (checkIfValidUUID(id)) {
+      const [row] = await db.query(`
       SELECT * FROM product
       WHERE id = $1
     `, [id]);
-    return row;
+      return row;
+    }
+    return undefined;
   }
 
   // seleciona todos onde o nome na tabela é igual ao nome do corpo
@@ -40,9 +49,29 @@ class ProdutosRepositories {
     return row;
   }
 
-  update() {}
+  async update(id, {
+    name, price, ingredient_id,
+  }) {
+    const [row] = await db.query(`
+      UPDATE product
+      SET name = $1, price = $2, ingredient_id = $3
+      WHERE id = $4
+      RETURNING *
+    `, [name, price, ingredient_id, id]);
+    return row;
+  }
 
-  delete() {}
+  async delete(id) {
+    if (checkIfValidUUID(id)) {
+      const deleteOp = await db.query(`
+      DELETE FROM product
+      WHERE id = $1
+      `, [id]);
+      return deleteOp;
+    }
+
+    return undefined;
+  }
 }
 
 module.exports = new ProdutosRepositories();
