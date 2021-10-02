@@ -1,33 +1,45 @@
-const express = require('express');
 const ProdutosRepositories = require('../Repositories/ProdutosRepositories');
 
 class ProdutoController {
   // Criar um Produto
   async store(request, response) {
     const {
-      name, price, ingredient, imageType, imageName, imageData,
+      name, price, ingredient_id,
     } = request.body; // desestruturando corpo da requisição
 
     if (!name) {
-      response.sendStatus(404).json({ error: 'Name is required!' }); // Se não tiber o nome, não continua
+      response.status(400).json({ error: 'Name is required!' }); // Se não tiver o nome, não continua
     }
 
     const productExists = await ProdutosRepositories.findByName(name);
 
     if (productExists) {
-      return response.sendStatus(400).json({ error: 'This name is already in use!' }); // Se o nome já existir, não continua
+      return response.status(400).json({ error: 'This name is already in use!' }); // Se o nome já existir, não continua
     }
 
     const product = await ProdutosRepositories.create({
-      name, price, ingredient, imageType, imageName, imageData,
-    }); // passa o nome, imagem, preço e ingrediente capturados do body como parametro para o método create
+      name, price, ingredient_id,
+    }); // passa o nome, imagem, preço e ingrediente id capturados do body como parametro para o método create
 
     response.json(product);
   }
 
-  index() {}
+  async index(request, response) {
+    const products = await ProdutosRepositories.findAll();
+    response.json(products);
+  }
 
-  show() {}
+  async show(request, response) {
+    const { id } = request.params;
+
+    const product = await ProdutosRepositories.findById(id);
+
+    if (!product) {
+      return response.status(404).json({ error: 'Product Not Found!' });
+    }
+
+    response.json(product);
+  }
 
   update() {}
 

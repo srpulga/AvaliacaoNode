@@ -16,11 +16,20 @@ CREATE TABLE IF NOT EXISTS ingredient (
 CREATE TABLE IF NOT EXISTS product (
   id UUID NOT NULL UNIQUE DEFAULT uuid_generate_v4(),
   name VARCHAR NOT NULL,
-  imagename VARCHAR NOT NULL,
-  image BYTEA NOT NULL,
+  price VARCHAR NOT NULL,
   ingredient_id UUID,
   FOREIGN KEY(ingredient_id) REFERENCES ingredient(id)
 );
+
+-- CREATE TABLE IF NOT EXISTS product (
+--   id UUID NOT NULL UNIQUE DEFAULT uuid_generate_v4(),
+--   name VARCHAR NOT NULL,
+--   price VARCHAR NOT NULL,
+--   imagename VARCHAR NOT NULL,
+--   image BYTEA NOT NULL,
+--   ingredient_id UUID,
+--   FOREIGN KEY(ingredient_id) REFERENCES ingredient(id)
+-- );
 
 -- Cria tabela dos usuarios
 
@@ -30,3 +39,7 @@ CREATE TABLE IF NOT EXISTS users (
   email VARCHAR NOT NULL,
   senha VARCHAR NOT NULL
 );
+
+DROP TABLE product;
+
+SELECT * FROM product WHERE name = 'Batata';
