@@ -45,11 +45,17 @@ class IngredienteController {
     const ingredientExists = await IngredientesRepositories.findById(id);
 
     if (!ingredientExists) {
-      response.status(404).json({ error: 'Ingredient Not Found!' });
+      return response.status(404).json({ error: 'Ingredient Not Found!' });
     }
 
     if (!name) {
-      response.status(400).json({ error: 'Name is required' });
+      return response.status(400).json({ error: 'Name is required' });
+    }
+
+    const ingredientByName = await IngredientesRepositories.findByName(name);
+
+    if (ingredientByName && ingredientByName.id !== id) {
+      return response.status(400).json({ error: 'This name is already in use' });
     }
 
     const ingredient = await IngredientesRepositories.update(id, { name, unitmeasure, unitprice });

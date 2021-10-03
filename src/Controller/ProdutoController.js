@@ -54,7 +54,7 @@ class ProdutoController {
     }
 
     if (!name) {
-      response.status(400).json({ error: 'Name is Required!' }); // Se não tiver o nome, não continua
+      return response.status(400).json({ error: 'Name is Required!' }); // Se não tiver o nome, não continua
     }
 
     const productByName = await ProdutosRepositories.findByName(name);
