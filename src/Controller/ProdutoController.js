@@ -4,7 +4,7 @@ class ProdutoController {
   // Criar um Produto
   async store(request, response) {
     const {
-      name, price, ingredient_id,
+      name, ingredients_id,
     } = request.body; // desestruturando corpo da requisição
 
     if (!name) {
@@ -18,10 +18,18 @@ class ProdutoController {
     }
 
     const product = await ProdutosRepositories.create({
-      name, price, ingredient_id,
-    }); // passa o nome, imagem, preço e ingrediente id capturados do body como parametro para o método create
+      name,
+    });
 
-    response.json(product);
+    console.log(product);
+
+    await ingredients_id.forEach(async (ingredient) => {
+      await ProdutosRepositories.createIngredientsProduct(product.id, ingredient);
+    });
+
+    const ingredientProduct = await ProdutosRepositories.getIngredientProduct(product.id);
+
+    response.json(ingredientProduct);
   }
 
   async index(request, response) {

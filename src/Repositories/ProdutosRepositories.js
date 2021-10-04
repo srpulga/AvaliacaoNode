@@ -9,14 +9,36 @@ function checkIfValidUUID(str) {
 }
 class ProdutosRepositories {
   async create({
-    name, price, ingredient_id,
+    name,
   }) {
     const [row] = await db.query(`
-      INSERT INTO product(name, price, ingredient_id)
-      VALUES($1, $2, $3)
+      INSERT INTO product(name)
+      VALUES($1)
       RETURNING *
-    `, [name, price, ingredient_id]);
+    `, [name]);
     return row;
+  }
+
+  async createIngredientsProduct(productid, ingredientid) {
+    await db.query(`
+      INSERT INTO ingredient_product(ingredient_id, product_id)
+      VALUES($1, $2)
+
+    `, [productid, ingredientid]);
+    return true;
+  }
+
+  async getIngredientProduct(product_id) {
+    console.log('SALVE');
+    const rows = await db.query(`
+      SELECT *
+      FROM ingredient_product
+      JOIN ingredient ON ingredient.id = ingredient_product.ingredient_id
+      JOIN product ON product.id = ingredient_product.product_id
+      WHERE product.id = $1
+      `, [product_id]);
+    console.log(rows);
+    return rows;
   }
 
   // Lista todos os produtos listados pelo nome, como não tem nenhuma validação ele puxa sempre por ordem ASC ("crescente"), nesse caso de A a Z

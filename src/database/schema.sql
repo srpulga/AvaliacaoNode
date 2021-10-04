@@ -9,16 +9,21 @@ CREATE TABLE IF NOT EXISTS ingredient (
   id UUID NOT NULL UNIQUE DEFAULT uuid_generate_v4(),
   name VARCHAR NOT NULL,
   unitmeasure VARCHAR NOT NULL,
-  unitprice VARCHAR NOT NULL
+  unitprice FLOAT NOT NULL
 );
 
 -- Cria tablea de produtos relacionado ao id dos ingredientes
 CREATE TABLE IF NOT EXISTS product (
   id UUID NOT NULL UNIQUE DEFAULT uuid_generate_v4(),
-  name VARCHAR NOT NULL,
-  price VARCHAR NOT NULL,
+  name VARCHAR NOT NULL
+);
+
+-- Cria tabela de relacionamento ingrediente e produto / n -> n
+CREATE TABLE IF NOT EXISTS ingredient_product (
   ingredient_id UUID,
-  FOREIGN KEY(ingredient_id) REFERENCES ingredient(id)
+  FOREIGN KEY(ingredient_id) REFERENCES ingredient(id),
+  product_id UUID,
+  FOREIGN KEY(product_id) REFERENCES product(id)
 );
 
 -- CREATE TABLE IF NOT EXISTS product (
@@ -40,6 +45,12 @@ CREATE TABLE IF NOT EXISTS users (
   senha VARCHAR NOT NULL
 );
 
+
+
 DROP TABLE product;
 
 SELECT * FROM product WHERE name = 'Batata';
+
+SELECT * FROM users;
+
+SELECT * FROM users WHERE email = 'edu@mail.com' AND senha = '123456';
