@@ -21,15 +21,36 @@ class ProdutoController {
       name,
     });
 
-    console.log(product);
-
     await ingredients_id.forEach(async (ingredient) => {
-      await ProdutosRepositories.createIngredientsProduct(product.id, ingredient);
+      await ProdutosRepositories.createIngredientsProduct(product.id, ingredient); // Vai gravar na tabela de relacionamento
     });
 
-    const ingredientProduct = await ProdutosRepositories.getIngredientProduct(product.id);
+    const ingredientProduct = await ProdutosRepositories.getIngredientProduct(product.id); // Pega tablea de relacionamento
 
-    response.json(ingredientProduct);
+    const productObject = { // Objeto dinamico para receber as infos do produto
+      id: product.id,
+      name: product.name,
+      ingredients: [],
+    };
+
+    let total = 0; // let para pegar a soma de todos os ingredientes para definir o valor total do produto
+
+    ingredientProduct.forEach((ingredient) => { // pegando todos os ingredientes do produto
+      const price = Number(ingredient.unit_price); // converter de string para number
+      total += price; // para cada unit_price add no total
+
+      const ingredientObject = {
+        id: ingredient.ingredient_id,
+        name: ingredient.ingredient_name,
+        unit_price: price,
+      };
+
+      productObject.ingredients.push(ingredientObject); // serve para adicionar um valor dentro de uma lista
+    });
+
+    productObject.product_price = total; // defino o valor total do product
+
+    response.json(productObject); // retorna o produtoObject
   }
 
   async index(request, response) {

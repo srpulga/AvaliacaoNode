@@ -24,14 +24,18 @@ class ProdutosRepositories {
       INSERT INTO ingredient_product(ingredient_id, product_id)
       VALUES($1, $2)
 
-    `, [productid, ingredientid]);
+    `, [ingredientid, productid]);
     return true;
   }
 
   async getIngredientProduct(product_id) {
     console.log('SALVE');
     const rows = await db.query(`
-      SELECT *
+      SELECT product.id AS product_id,
+      product.name AS product_name,
+      ingredient.id AS ingredient_id,
+      ingredient.name AS ingredient_name,
+      ingredient.unitprice AS unit_price
       FROM ingredient_product
       JOIN ingredient ON ingredient.id = ingredient_product.ingredient_id
       JOIN product ON product.id = ingredient_product.product_id

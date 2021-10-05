@@ -53,4 +53,6 @@ SELECT * FROM product WHERE name = 'Batata';
 
 SELECT * FROM users;
 
+SELECT * FROM ingredient_product;
+
 SELECT * FROM users WHERE email = 'edu@mail.com' AND senha = '123456';
