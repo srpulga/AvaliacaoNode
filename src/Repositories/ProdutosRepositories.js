@@ -48,8 +48,15 @@ class ProdutosRepositories {
   // Lista todos os produtos listados pelo nome, como não tem nenhuma validação ele puxa sempre por ordem ASC ("crescente"), nesse caso de A a Z
   async findAll() {
     const rows = await db.query(`
-      SELECT * FROM product
-      ORDER BY name
+    SELECT product.id AS product_id,
+    product.name AS product_name,
+    ingredient.id AS ingredient_id,
+    ingredient.name AS ingredient_name,
+    ingredient.unitprice AS unit_price
+    FROM ingredient_product
+    JOIN ingredient ON ingredient.id = ingredient_product.ingredient_id
+    JOIN product ON product.id = ingredient_product.product_id
+    ORDER BY product.name
     `);
     return rows;
   }

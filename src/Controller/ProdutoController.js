@@ -55,7 +55,42 @@ class ProdutoController {
 
   async index(request, response) {
     const products = await ProdutosRepositories.findAll();
-    response.json(products);
+
+    const productsIdAdded = [];
+    const listProducts = [];
+
+    // varre a lista de produtos que retornou da base
+    products.forEach((element) => {
+      // valida se teve algum produto id já adicionado na lista de produtos
+      if (productsIdAdded.indexOf(element.product_id) === -1) {
+        // agrupa os ingredientes do mesmo produto
+        const ingredientsProduct = products.filter((elementFIlter) => elementFIlter.product_id === element.product_id);
+        const productObject = {
+          id: element.product_id,
+          name: element.product_name,
+          ingredients: [],
+        };
+
+        let total = 0;
+        // Varre todos os ingredientes do produto
+        ingredientsProduct.forEach((ingredient) => {
+          const price = Number(ingredient.unit_price);
+          total += price;
+          productObject.ingredients.push({
+            id: ingredient.ingredient_id,
+            name: ingredient.ingredient_name,
+            price: ingredient.unit_price,
+          });
+        });
+
+        productObject.total = total;
+        // Informa para a lista de de id's de produtos adicionados para que não insira o mesmo produto
+        productsIdAdded.push(element.product_id);
+        listProducts.push(productObject);
+      }
+    });
+
+    response.json(listProducts);
   }
 
   async show(request, response) {
@@ -73,7 +108,7 @@ class ProdutoController {
   async update(request, response) {
     const { id } = request.params;
     const {
-      name, price, ingredient_id,
+      name, ingredient_id,
     } = request.body;
 
     const productExists = await ProdutosRepositories.findById(id);
@@ -93,7 +128,7 @@ class ProdutoController {
     }
 
     const product = await ProdutosRepositories.update(id, {
-      name, price, ingredient_id,
+      name, ingredient_id,
     });
 
     response.json(product);

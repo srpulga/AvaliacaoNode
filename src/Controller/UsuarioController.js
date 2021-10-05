@@ -5,7 +5,6 @@ require('dotenv-safe').config();
 
 class UsuarioController {
   async login(request, response, next) {
-    console.log('SALVE');
     const { email, senha } = request.body;
 
     const findUser = await UsuarioRepositories.findByLogin(email, senha);
