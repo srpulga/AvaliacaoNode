@@ -64,11 +64,18 @@ class ProdutosRepositories {
   // Seleciona todos onde o id na tabela é igual ao id do corpo
   async findById(id) {
     if (checkIfValidUUID(id)) {
-      const [row] = await db.query(`
-      SELECT * FROM product
-      WHERE id = $1
+      const rows = await db.query(`
+      SELECT product.id AS product_id,
+      product.name AS product_name,
+      ingredient.id AS ingredient_id,
+      ingredient.name AS ingredient_name,
+      ingredient.unitprice AS unit_price
+      FROM ingredient_product
+      JOIN ingredient ON ingredient.id = ingredient_product.ingredient_id
+      JOIN product ON product.id = ingredient_product.product_id
+      WHERE product.id = $1
     `, [id]);
-      return row;
+      return rows;
     }
     return undefined;
   }
@@ -83,14 +90,14 @@ class ProdutosRepositories {
   }
 
   async update(id, {
-    name, price, ingredient_id,
+    name,
   }) {
     const [row] = await db.query(`
       UPDATE product
-      SET name = $1, price = $2, ingredient_id = $3
-      WHERE id = $4
+      SET name = $1
+      WHERE id = $2
       RETURNING *
-    `, [name, price, ingredient_id, id]);
+    `, [name, id]);
     return row;
   }
 

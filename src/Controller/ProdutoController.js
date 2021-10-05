@@ -96,13 +96,33 @@ class ProdutoController {
   async show(request, response) {
     const { id } = request.params;
 
-    const product = await ProdutosRepositories.findById(id);
+    const productIngredients = await ProdutosRepositories.findById(id);
+    let productInsert = false;
+    let productObject;
 
-    if (!product) {
+    if (!productIngredients) {
       return response.status(404).json({ error: 'Product Not Found!' });
     }
 
-    response.json(product);
+    console.log(productIngredients);
+    productIngredients.forEach((element) => {
+      if (!productInsert) {
+        productObject = {
+          id: element.product_id,
+          name: element.product_name,
+          ingredients: [],
+        };
+        productInsert = true;
+      }
+
+      productInsert.ingredients.push({
+        id: element.ingredient_id,
+        name: element.ingredient_name,
+        price: element.unit_price,
+      });
+    });
+
+    response.json(productObject);
   }
 
   async update(request, response) {
