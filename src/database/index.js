@@ -11,7 +11,7 @@ const client = new Client({
 });
 
 client.connect();
-console.log('Banco Conectado!');
+console.log('🔥 Banco Conectado!');
 
 exports.query = async (query, values) => {
   const { rows } = await client.query(query, values);

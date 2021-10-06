@@ -29,7 +29,6 @@ class ProdutosRepositories {
   }
 
   async getIngredientProduct(product_id) {
-    console.log('SALVE');
     const rows = await db.query(`
       SELECT product.id AS product_id,
       product.name AS product_name,
@@ -41,7 +40,6 @@ class ProdutosRepositories {
       JOIN product ON product.id = ingredient_product.product_id
       WHERE product.id = $1
       `, [product_id]);
-    console.log(rows);
     return rows;
   }
 

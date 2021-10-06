@@ -9,8 +9,6 @@ class UsuarioController {
 
     const findUser = await UsuarioRepositories.findByLogin(email, senha);
 
-    console.log(findUser);
-
     if (findUser) {
       const { id } = findUser;
 

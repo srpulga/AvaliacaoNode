@@ -155,7 +155,6 @@ class ProdutoController {
 
     const ingredientProduct = await ProdutosRepositories.getIngredientProduct(id); // Pega tablea de relacionamento
 
-    console.log(product);
     const productObject = { // Objeto dinamico para receber as infos do produto
       id: product.id,
       name: product.name,
