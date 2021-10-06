@@ -120,7 +120,7 @@ class ProdutoController {
       });
     });
 
-    response.json(productIngredients);
+    response.json(productObject);
   }
 
   async update(request, response) {

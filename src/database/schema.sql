@@ -44,15 +44,3 @@ CREATE TABLE IF NOT EXISTS users (
   email VARCHAR NOT NULL,
   senha VARCHAR NOT NULL
 );
-
-
-
-DROP TABLE product;
-
-SELECT * FROM product WHERE name = 'Batata';
-
-SELECT * FROM users;
-
-SELECT * FROM ingredient_product;
-
-SELECT * FROM users WHERE email = 'edu@mail.com' AND senha = '123456';
