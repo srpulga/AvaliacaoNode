@@ -128,7 +128,7 @@ class ProdutoController {
   async update(request, response) {
     const { id } = request.params;
     const {
-      name, ingredient_id,
+      name, ingredients_id,
     } = request.body;
 
     const productExists = await ProdutosRepositories.findById(id);
@@ -147,11 +147,41 @@ class ProdutoController {
       return response.status(400).json({ error: 'This Name is Already in Use!' }); // se ja tiver um produto com esse nome, não pode atualizar
     }
 
-    const product = await ProdutosRepositories.update(id, {
-      name, ingredient_id,
+    const product = await ProdutosRepositories.update(id, name);
+
+    await ProdutosRepositories.removeIngredientsInProductId(id);
+
+    await ingredients_id.forEach(async (element) => {
+      await ProdutosRepositories.createIngredientsProduct(id, element); // Vai gravar na tabela de relacionamento
     });
 
-    response.json(product);
+    const ingredientProduct = await ProdutosRepositories.getIngredientProduct(id); // Pega tablea de relacionamento
+
+    console.log(product);
+    const productObject = { // Objeto dinamico para receber as infos do produto
+      id: product.id,
+      name: product.name,
+      ingredients: [],
+    };
+
+    let total = 0; // let para pegar a soma de todos os ingredientes para definir o valor total do produto
+
+    ingredientProduct.forEach((ingredient) => { // pegando todos os ingredientes do produto
+      const price = Number(ingredient.unit_price); // converter de string para number
+      total += price; // para cada unit_price add no total
+
+      const ingredientObject = {
+        id: ingredient.ingredient_id,
+        name: ingredient.ingredient_name,
+        unit_price: price,
+      };
+
+      productObject.ingredients.push(ingredientObject); // serve para adicionar um valor dentro de uma lista
+    });
+
+    productObject.total = total;
+
+    response.json(productObject);
   }
 
   async delete(request, response) {

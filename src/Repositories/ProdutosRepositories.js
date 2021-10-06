@@ -89,9 +89,7 @@ class ProdutosRepositories {
     return row;
   }
 
-  async update(id, {
-    name,
-  }) {
+  async update(id, name) {
     const [row] = await db.query(`
       UPDATE product
       SET name = $1
@@ -99,6 +97,13 @@ class ProdutosRepositories {
       RETURNING *
     `, [name, id]);
     return row;
+  }
+
+  async removeIngredientsInProductId(id) {
+    await db.query(`
+      DELETE FROM ingredient_product WHERE product_id = $1
+    `, [id]);
+    return true;
   }
 
   async delete(id) {
