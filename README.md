@@ -8,7 +8,6 @@ JWT para validação das rotas (utilizado como base: https://www.luiztools.com.b
 
 ## Usuário
 
-Temos:
 - rota para criar os usuários (sem autenticação), onde é preciso passar no corpo o nome, email e senha.
 
 {
@@ -26,7 +25,7 @@ Temos:
 	"senha": "senha"
 }
 
-## Inrgedientes
+## Ingredientes
 
 - rota para criar ingrediente, onde é passado o nome, unidade de medida e valor
 
