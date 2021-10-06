@@ -109,8 +109,7 @@ class ProdutosRepositories {
   async delete(id) {
     if (checkIfValidUUID(id)) {
       const deleteOp = await db.query(`
-      DELETE FROM product
-      WHERE id = $1
+      DELETE FROM ingredient_product WHERE product_id = $1
       `, [id]);
       return deleteOp;
     }

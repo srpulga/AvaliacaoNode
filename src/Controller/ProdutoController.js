@@ -103,8 +103,6 @@ class ProdutoController {
     if (!productIngredients) {
       return response.status(404).json({ error: 'Product Not Found!' });
     }
-
-    console.log(productIngredients);
     productIngredients.forEach((element) => {
       if (!productInsert) {
         productObject = {
@@ -115,14 +113,14 @@ class ProdutoController {
         productInsert = true;
       }
 
-      productInsert.ingredients.push({
+      productObject.ingredients.push({
         id: element.ingredient_id,
         name: element.ingredient_name,
         price: element.unit_price,
       });
     });
 
-    response.json(productObject);
+    response.json(productIngredients);
   }
 
   async update(request, response) {
